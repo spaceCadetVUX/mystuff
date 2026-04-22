@@ -1,0 +1,614 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Lyra — About</title>
+
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/framer-motion@11.3.19/dist/framer-motion.js"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 5% 64.9%;
+    --primary: 14 71% 59%;          /* #d97757 default (overridable) */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --radius: 0.75rem;
+  }
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+  }
+  html, body { background: hsl(var(--background)); color: hsl(var(--foreground)); font-family: 'Geist', ui-sans-serif, system-ui, sans-serif; font-feature-settings: "ss01","cv11"; }
+  .font-serif-display { font-family: 'Instrument Serif', ui-serif, Georgia, serif; font-weight: 400; letter-spacing: -0.01em; }
+
+  /* Lyra gradient placeholders */
+  .grad-hero {
+    background:
+      radial-gradient(80% 120% at 85% 15%, hsla(var(--primary) / .85), transparent 55%),
+      radial-gradient(60% 90% at 15% 85%, hsla(220 90% 60% / .55), transparent 60%),
+      radial-gradient(40% 60% at 60% 60%, hsla(280 80% 65% / .45), transparent 70%),
+      linear-gradient(135deg, #0a0a0a 0%, #17171a 50%, #0a0a0a 100%);
+  }
+  .grad-chat {
+    background:
+      radial-gradient(60% 80% at 30% 30%, hsla(var(--primary) / .7), transparent 60%),
+      radial-gradient(50% 70% at 75% 70%, hsla(200 95% 60% / .55), transparent 60%),
+      radial-gradient(70% 50% at 50% 100%, hsla(320 80% 65% / .35), transparent 70%),
+      linear-gradient(160deg, #111114 0%, #1c1c22 100%);
+  }
+  .grad-moon {
+    background:
+      radial-gradient(circle at 72% 32%, hsla(40 95% 75% / .95) 0%, hsla(30 90% 60% / .4) 18%, transparent 28%),
+      radial-gradient(80% 90% at 30% 80%, hsla(260 70% 40% / .65), transparent 65%),
+      linear-gradient(180deg, #05060a 0%, #0b0d18 60%, #1a1330 100%);
+  }
+  .grad-card {
+    background:
+      radial-gradient(60% 90% at 70% 30%, hsla(var(--primary) / .75), transparent 60%),
+      radial-gradient(70% 80% at 20% 80%, hsla(210 90% 55% / .5), transparent 65%),
+      linear-gradient(135deg, #0c0c10 0%, #1a1a22 100%);
+  }
+  .grain::after {
+    content:""; position:absolute; inset:0; pointer-events:none; opacity:.08; mix-blend-mode:overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.7'/></svg>");
+  }
+
+  /* subtle ambient motion on gradients */
+  @keyframes floaty { 0%,100%{ transform: translate3d(0,0,0) } 50%{ transform: translate3d(0,-6px,0) } }
+  .floaty { animation: floaty 9s ease-in-out infinite; }
+
+  /* number counter */
+  @keyframes fadeUp { from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none} }
+  .fade-up { animation: fadeUp .7s ease both; }
+</style>
+</head>
+<body class="antialiased">
+<div id="root"></div>
+
+<script>
+  // Tailwind theme extension to use our HSL CSS vars
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        colors: {
+          border: 'hsl(var(--border))',
+          input: 'hsl(var(--input))',
+          ring: 'hsl(var(--ring))',
+          background: 'hsl(var(--background))',
+          foreground: 'hsl(var(--foreground))',
+          primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
+          secondary: { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
+          muted: { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
+          accent: { DEFAULT: 'hsl(var(--accent))', foreground: 'hsl(var(--accent-foreground))' },
+          card: { DEFAULT: 'hsl(var(--card))', foreground: 'hsl(var(--card-foreground))' },
+        },
+        borderRadius: { lg: 'var(--radius)', md: 'calc(var(--radius) - 2px)', sm: 'calc(var(--radius) - 4px)' },
+        fontFamily: { sans: ['Geist','ui-sans-serif','system-ui'], serif: ['Instrument Serif','ui-serif','Georgia'] }
+      }
+    }
+  };
+</script>
+
+<script type="text/babel" data-presets="react">
+const { useEffect, useMemo, useRef, useState } = React;
+const { motion, useInView } = window.Motion || window.FramerMotion || {};
+
+// ---------- Tweaks defaults ----------
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "theme": "dark",
+  "primary": "#d97757",
+  "showStats": true,
+  "heroLayout": "stacked",
+  "aboutLayout": "split-right",
+  "headline": "The Lyra ecosystem brings together our models, products, and platforms.",
+  "headlineAccent": "ecosystem",
+  "subhead": "Lyra is evolving beyond the models themselves — an ecosystem of products, APIs, and platforms helping teams build with intelligence at the core.",
+  "aboutTitle": "About Lyra",
+  "aboutBody": "We're a small, opinionated team shipping tools that make AI feel useful — not magical, not threatening, just the most capable collaborator a builder has ever had."
+}/*EDITMODE-END*/;
+
+// ---------- Utilities ----------
+function cn(...xs){ return xs.filter(Boolean).join(' '); }
+
+function hexToHsl(hex){
+  let h = hex.replace('#','');
+  if(h.length===3) h = h.split('').map(c=>c+c).join('');
+  const r = parseInt(h.slice(0,2),16)/255;
+  const g = parseInt(h.slice(2,4),16)/255;
+  const b = parseInt(h.slice(4,6),16)/255;
+  const max=Math.max(r,g,b), min=Math.min(r,g,b);
+  let H,S,L=(max+min)/2;
+  if(max===min){ H=0; S=0; }
+  else {
+    const d=max-min;
+    S = L>0.5 ? d/(2-max-min) : d/(max+min);
+    switch(max){
+      case r: H=((g-b)/d + (g<b?6:0)); break;
+      case g: H=((b-r)/d + 2); break;
+      default: H=((r-g)/d + 4);
+    }
+    H/=6;
+  }
+  return `${Math.round(H*360)} ${Math.round(S*100)}% ${Math.round(L*100)}%`;
+}
+
+// ---------- Button (shadcn-style) ----------
+const buttonBase = "inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-medium transition-all outline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring/70 disabled:pointer-events-none disabled:opacity-50";
+const buttonVariants = {
+  default: "bg-primary text-primary-foreground shadow-sm shadow-black/5 hover:bg-primary/90",
+  secondary: "bg-secondary text-secondary-foreground shadow-sm shadow-black/5 hover:bg-secondary/80",
+  outline: "border border-border bg-background shadow-sm shadow-black/5 hover:bg-accent hover:text-accent-foreground",
+  ghost: "hover:bg-accent hover:text-accent-foreground",
+  link: "text-primary underline-offset-4 hover:underline",
+};
+const buttonSizes = {
+  default: "h-9 px-4 py-2",
+  sm: "h-8 rounded-lg px-3 text-xs",
+  lg: "h-10 rounded-lg px-8",
+  icon: "h-9 w-9",
+};
+function Button({variant="default", size="default", className, children, ...rest}){
+  return <button className={cn(buttonBase, buttonVariants[variant], buttonSizes[size], className)} {...rest}>{children}</button>;
+}
+
+// ---------- Icons (lucide-style inline) ----------
+const ChevronRight = ({className="size-4"}) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m9 18 6-6-6-6"/></svg>
+);
+const Sun = ({className="size-4"}) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+);
+const Moon = ({className="size-4"}) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+);
+const Sparkle = ({className="size-4"}) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/></svg>
+);
+const Settings = ({className="size-4"}) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 0 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1A2 2 0 1 1 4.3 17l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 0 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1A2 2 0 1 1 7 4.3l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1A2 2 0 1 1 19.7 7l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+);
+
+// ---------- Gradient "Image" placeholder ----------
+function GradImage({variant="hero", className="", children, label}){
+  const map = { hero:'grad-hero', chat:'grad-chat', moon:'grad-moon', card:'grad-card' };
+  return (
+    <div className={cn("relative overflow-hidden grain", map[variant], className)}>
+      <div className="absolute inset-0 floaty">
+        {variant === 'hero' && (
+          <svg className="absolute inset-0 w-full h-full opacity-40" viewBox="0 0 800 400" preserveAspectRatio="none">
+            <defs>
+              <radialGradient id="rg1" cx="80%" cy="20%"><stop offset="0%" stopColor="white" stopOpacity="0.35"/><stop offset="100%" stopColor="white" stopOpacity="0"/></radialGradient>
+            </defs>
+            <circle cx="640" cy="80" r="180" fill="url(#rg1)"/>
+          </svg>
+        )}
+        {variant === 'moon' && (
+          <div className="absolute right-[28%] top-[26%] size-16 rounded-full bg-orange-200/90 shadow-[0_0_80px_30px_rgba(255,180,120,0.6)]"></div>
+        )}
+      </div>
+      {label && (
+        <div className="absolute left-4 top-4 text-[10px] uppercase tracking-[0.18em] font-medium text-white/60">{label}</div>
+      )}
+      {children}
+    </div>
+  );
+}
+
+// ---------- Stat counter ----------
+function Stat({label, value, delay=0}){
+  const ref = useRef(null);
+  const [shown, setShown] = useState(false);
+  useEffect(()=>{
+    const io = new IntersectionObserver(([e])=>{ if(e.isIntersecting){ setShown(true); io.disconnect(); }},{threshold:.3});
+    if(ref.current) io.observe(ref.current);
+    return ()=> io.disconnect();
+  },[]);
+  // parse numeric prefix
+  const m = value.match(/^([\d,.]+)(.*)$/);
+  const target = m ? parseFloat(m[1].replace(/,/g,'')) : 0;
+  const suffix = m ? m[2] : value;
+  const [n, setN] = useState(0);
+  useEffect(()=>{
+    if(!shown) return;
+    const t0 = performance.now(); const dur = 1200;
+    let raf; const tick = t => {
+      const p = Math.min(1,(t-t0)/dur);
+      const eased = 1 - Math.pow(1-p,3);
+      setN(target * eased);
+      if(p<1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return ()=> cancelAnimationFrame(raf);
+  },[shown,target]);
+  const display = Number.isInteger(target) ? Math.round(n).toLocaleString() : n.toFixed(1);
+  return (
+    <div ref={ref} className={cn("relative py-8 md:py-10", shown && "fade-up")} style={{animationDelay: delay+'ms'}}>
+      <div className="font-serif-display text-5xl md:text-6xl leading-none text-foreground">
+        {display}<span className="text-primary">{suffix}</span>
+      </div>
+      <div className="mt-3 text-xs uppercase tracking-[0.14em] text-muted-foreground">{label}</div>
+    </div>
+  );
+}
+
+// ---------- Top Nav (lightweight, for context) ----------
+function Nav({onToggleTheme, theme, onOpenTweaks}){
+  return (
+    <header className="sticky top-0 z-30 border-b border-border/60 bg-background/70 backdrop-blur">
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 h-14">
+        <a href="#" className="flex items-center gap-2">
+          <span className="grid place-items-center size-7 rounded-md bg-foreground text-background">
+            <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M4 20 L12 4 L20 20 Z"/><path d="M8 20 L16 20"/></svg>
+          </span>
+          <span className="font-serif-display text-xl leading-none">Lyra</span>
+        </a>
+        <nav className="hidden md:flex items-center gap-7 text-sm text-muted-foreground">
+          <a href="#" className="hover:text-foreground">Platform</a>
+          <a href="#" className="hover:text-foreground">Research</a>
+          <a href="#" className="text-foreground">About</a>
+          <a href="#" className="hover:text-foreground">Careers</a>
+        </nav>
+        <div className="flex items-center gap-2">
+          <button onClick={onToggleTheme} aria-label="Toggle theme" className="size-9 grid place-items-center rounded-lg hover:bg-accent text-muted-foreground hover:text-foreground">
+            {theme==='dark' ? <Sun/> : <Moon/>}
+          </button>
+          <button onClick={onOpenTweaks} aria-label="Open tweaks" className="size-9 grid place-items-center rounded-lg hover:bg-accent text-muted-foreground hover:text-foreground md:hidden">
+            <Settings/>
+          </button>
+          <Button size="sm" className="gap-1 pr-1.5">Get started <ChevronRight/></Button>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+// ---------- Hero ----------
+function Hero({t}){
+  const headline = t.headline;
+  const accent = t.headlineAccent;
+  const parts = accent && headline.includes(accent) ? headline.split(accent) : null;
+
+  if (t.heroLayout === 'overlay') {
+    return (
+      <section className="py-12 md:py-20">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="relative overflow-hidden rounded-2xl">
+            <GradImage variant="hero" className="w-full h-[360px] md:h-[560px]" label="LYRA / CORE" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"/>
+            <div className="absolute inset-x-0 bottom-0 p-6 md:p-12">
+              <div className="grid gap-8 md:grid-cols-12 md:gap-12 items-end">
+                <h1 className="md:col-span-7 font-serif-display text-white text-4xl md:text-6xl leading-[1.02]">
+                  {parts ? (<>The Lyra <span className="italic text-primary">{accent}</span><span className="text-white/70">{parts[1]}</span></>) : headline}
+                </h1>
+                <div className="md:col-span-5 space-y-5 text-white/80 max-w-md">
+                  <p className="text-[15px] leading-relaxed">{t.subhead}</p>
+                  <div className="flex items-center gap-3">
+                    <Button size="sm" className="gap-1 pr-1.5">Read the manifesto <ChevronRight/></Button>
+                    <Button size="sm" variant="ghost" className="text-white hover:bg-white/10 hover:text-white gap-1 pr-1.5">Watch film <ChevronRight/></Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* small corner chrome */}
+            <div className="absolute left-5 top-5 flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-white/70">
+              <span className="size-1.5 rounded-full bg-primary animate-pulse"/> V.04 · Spring 2026
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // stacked (original-ish)
+  return (
+    <section className="py-16 md:py-24">
+      <div className="mx-auto max-w-6xl space-y-10 px-6">
+        <GradImage variant="hero" className="rounded-xl w-full h-[240px] md:h-[460px]" label="LYRA / CORE"/>
+        <div className="grid gap-8 md:grid-cols-2 md:gap-12">
+          <h1 className="font-serif-display text-4xl md:text-5xl leading-[1.05]">
+            {parts ? (<>The Lyra <span className="italic text-primary">{accent}</span><span className="text-muted-foreground">{parts[1]}</span></>) : headline}
+          </h1>
+          <div className="space-y-6 text-muted-foreground max-w-md">
+            <p>{t.subhead}</p>
+            <Button variant="secondary" size="sm" className="gap-1 pr-1.5">Learn more <ChevronRight/></Button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ---------- Stats row ----------
+function Stats({items}){
+  return (
+    <section className="border-y border-border">
+      <div className="mx-auto max-w-6xl px-6 grid grid-cols-2 md:grid-cols-4 divide-x divide-border [&>*:nth-child(-n+2)]:border-b md:[&>*:nth-child(-n+2)]:border-b-0 [&>*:nth-child(-n+2)]:border-border">
+        {items.map((it,i)=> (
+          <div key={it.label} className="px-6 first:pl-0 last:pr-0">
+            <Stat label={it.label} value={it.value} delay={i*90}/>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// ---------- About section (cards layout) ----------
+function About({t}){
+  return (
+    <section className="py-20 md:py-28">
+      <div className="mx-auto max-w-6xl space-y-16 px-6">
+        <div className="grid gap-8 md:grid-cols-12 md:gap-12">
+          <div className="md:col-span-5">
+            <div className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] text-muted-foreground mb-4">
+              <span className="size-1 rounded-full bg-primary"/> 01 — Who we are
+            </div>
+            <h2 className="font-serif-display text-4xl md:text-6xl leading-[1.02]">{t.aboutTitle}</h2>
+          </div>
+          <div className="md:col-span-7 md:pt-4 text-muted-foreground text-lg leading-relaxed max-w-2xl">
+            {t.aboutBody}
+          </div>
+        </div>
+
+        <div className={cn(
+          "flex flex-col gap-6",
+          t.aboutLayout === 'split-right' && "md:flex-row",
+          t.aboutLayout === 'split-left' && "md:flex-row-reverse",
+          t.aboutLayout === 'stack' && "md:flex-col",
+        )}>
+          {/* Tall image */}
+          <div className="md:flex-1">
+            <GradImage variant="chat" className="rounded-xl w-full h-[300px] sm:h-[360px] md:h-full min-h-[520px]" label="LYRA / CHAT">
+              {/* faux chat UI glyphs */}
+              <div className="absolute inset-x-6 bottom-6 flex flex-col gap-2">
+                <div className="h-8 w-3/5 rounded-lg bg-white/15 backdrop-blur-sm"/>
+                <div className="h-8 w-2/5 rounded-lg bg-white/10 backdrop-blur-sm ml-auto"/>
+                <div className="h-10 rounded-xl bg-white/20 backdrop-blur-sm"/>
+              </div>
+            </GradImage>
+          </div>
+
+          {/* Right cards */}
+          <div className="flex flex-col gap-6 md:flex-1">
+            <HoverCard
+              key="card-growth"
+              image={<GradImage variant="moon" className="h-60 sm:h-64 md:h-56 w-full"/>}
+              title="Accelerate growth"
+              body="Our models and tools compress months of R&D into days — measurable impact across support, research, and product."
+              cta="How it works"
+              dark
+            />
+            <HoverCard
+              key="card-future"
+              fullImage={<GradImage variant="card" className="h-full w-full min-h-[260px]"/>}
+              title="Future-ready by design"
+              body="Composable primitives that scale — from a single API call to org-wide deployments."
+              cta="Explore the platform"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function HoverCard({image, fullImage, title, body, cta, dark=false}){
+  if (fullImage) {
+    return (
+      <div className="group relative overflow-hidden rounded-xl shadow-lg min-h-[260px] transition-transform duration-300 hover:-translate-y-0.5">
+        {fullImage}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent"/>
+        <div className="absolute inset-x-0 bottom-0 p-6 text-white">
+          <h3 className="font-serif-display text-2xl">{title}</h3>
+          <p className="mt-2 text-sm text-white/80 max-w-sm">{body}</p>
+          <button className="mt-4 inline-flex items-center gap-1 text-sm text-white/90 hover:text-white">
+            {cta} <ChevronRight className="size-4 transition-transform group-hover:translate-x-0.5"/>
+          </button>
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div className={cn("group relative overflow-hidden rounded-xl shadow-lg transition-transform duration-300 hover:-translate-y-0.5",
+        dark ? "bg-black text-white" : "bg-muted text-foreground")}>
+      <div className="relative overflow-hidden">
+        <div className="transition-transform duration-500 group-hover:scale-[1.04]">{image}</div>
+        <div className="absolute bottom-0 h-32 w-full bg-gradient-to-t from-black via-black/60 to-transparent pointer-events-none"/>
+      </div>
+      <div className="p-6">
+        <h3 className="font-serif-display text-2xl">{title}</h3>
+        <p className={cn("mt-2 text-sm max-w-sm", dark ? "text-white/70" : "text-muted-foreground")}>{body}</p>
+        <Button variant="outline" size="sm" className={cn("mt-4", dark && "bg-transparent text-white border-white/30 hover:bg-white hover:text-black")}>
+          {cta}
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+// ---------- Footer strip ----------
+function Footer(){
+  return (
+    <footer className="border-t border-border">
+      <div className="mx-auto max-w-6xl px-6 py-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 text-sm text-muted-foreground">
+        <div className="flex items-center gap-2">
+          <span className="grid place-items-center size-6 rounded-md bg-foreground text-background">
+            <svg viewBox="0 0 24 24" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M4 20 L12 4 L20 20 Z"/><path d="M8 20 L16 20"/></svg>
+          </span>
+          <span className="font-serif-display text-base text-foreground leading-none">Lyra</span>
+          <span className="ml-3">© 2026</span>
+        </div>
+        <div className="flex gap-6">
+          <a href="#" className="hover:text-foreground">Platform</a>
+          <a href="#" className="hover:text-foreground">Research</a>
+          <a href="#" className="hover:text-foreground">Trust</a>
+          <a href="#" className="hover:text-foreground">Careers</a>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+// ---------- Tweaks Panel ----------
+function TweaksPanel({open, onClose, tweaks, setTweak, onReset}){
+  const presets = ['#d97757','#6366f1','#10b981','#f59e0b','#ef4444','#0ea5e9','#111111'];
+  return (
+    <div className={cn("fixed right-4 bottom-4 z-50 w-[300px] rounded-xl border border-border bg-background shadow-2xl shadow-black/20 transition-all", open ? "opacity-100 translate-y-0" : "opacity-0 pointer-events-none translate-y-2")}>
+      <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+        <div className="flex items-center gap-2">
+          <Sparkle className="size-4 text-primary"/>
+          <span className="text-sm font-medium">Tweaks</span>
+        </div>
+        <button onClick={onClose} className="text-xs text-muted-foreground hover:text-foreground">Close</button>
+      </div>
+      <div className="p-4 space-y-5 text-sm">
+        <Row label="Theme">
+          <Seg value={tweaks.theme} onChange={v=>setTweak('theme',v)} options={[['light','Light'],['dark','Dark']]}/>
+        </Row>
+        <Row label="Primary">
+          <div className="flex flex-wrap gap-1.5">
+            {presets.map(c=>(
+              <button key={c} onClick={()=>setTweak('primary',c)} className={cn("size-6 rounded-full border border-black/10 ring-offset-2 ring-offset-background", tweaks.primary===c && "ring-2 ring-foreground")} style={{background:c}}/>
+            ))}
+            <input type="color" value={tweaks.primary} onChange={e=>setTweak('primary', e.target.value)} className="size-6 rounded-full overflow-hidden cursor-pointer border border-border"/>
+          </div>
+        </Row>
+        <Row label="Stats row">
+          <Toggle value={tweaks.showStats} onChange={v=>setTweak('showStats',v)}/>
+        </Row>
+        <Row label="Hero layout">
+          <Seg value={tweaks.heroLayout} onChange={v=>setTweak('heroLayout',v)} options={[['overlay','Overlay'],['stacked','Stacked']]}/>
+        </Row>
+        <Row label="About layout">
+          <Seg value={tweaks.aboutLayout} onChange={v=>setTweak('aboutLayout',v)} options={[['split-right','Right'],['split-left','Left'],['stack','Stack']]}/>
+        </Row>
+        <div className="pt-2 border-t border-border space-y-2">
+          <Field label="Headline" value={tweaks.headline} onChange={v=>setTweak('headline',v)} area/>
+          <Field label="Accent word" value={tweaks.headlineAccent} onChange={v=>setTweak('headlineAccent',v)}/>
+          <Field label="Subhead" value={tweaks.subhead} onChange={v=>setTweak('subhead',v)} area/>
+        </div>
+        <button onClick={onReset} className="w-full text-xs text-muted-foreground hover:text-foreground border border-border rounded-md py-1.5">Reset tweaks</button>
+      </div>
+    </div>
+  );
+}
+function Row({label, children}){
+  return <div className="flex items-center justify-between gap-3"><span className="text-muted-foreground text-xs uppercase tracking-wider">{label}</span><div>{children}</div></div>;
+}
+function Seg({value, onChange, options}){
+  return (
+    <div className="inline-flex rounded-md border border-border p-0.5 bg-muted/50">
+      {options.map(([v,l])=>(
+        <button key={v} onClick={()=>onChange(v)} className={cn("px-2.5 py-1 text-xs rounded-sm", value===v ? "bg-background shadow-sm text-foreground":"text-muted-foreground")}>{l}</button>
+      ))}
+    </div>
+  );
+}
+function Toggle({value, onChange}){
+  return (
+    <button onClick={()=>onChange(!value)} className={cn("relative w-9 h-5 rounded-full transition-colors", value ? "bg-primary" : "bg-muted border border-border")}>
+      <span className={cn("absolute top-0.5 size-4 rounded-full bg-white shadow transition-all", value ? "left-4" : "left-0.5")}/>
+    </button>
+  );
+}
+function Field({label, value, onChange, area}){
+  return (
+    <label className="block">
+      <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">{label}</div>
+      {area
+        ? <textarea value={value} onChange={e=>onChange(e.target.value)} rows={2} className="w-full text-xs rounded-md border border-border bg-background px-2 py-1.5 resize-y"/>
+        : <input value={value} onChange={e=>onChange(e.target.value)} className="w-full text-xs rounded-md border border-border bg-background px-2 py-1.5"/>}
+    </label>
+  );
+}
+
+// ---------- App ----------
+function App(){
+  const [tweaks, setTweaks] = useState(TWEAK_DEFAULTS);
+  const [tweaksOpen, setTweaksOpen] = useState(false);
+
+  // Apply theme + primary to :root
+  useEffect(()=>{
+    document.documentElement.classList.toggle('dark', tweaks.theme==='dark');
+    document.documentElement.style.setProperty('--primary', hexToHsl(tweaks.primary));
+  },[tweaks.theme, tweaks.primary]);
+
+  // Host Tweaks protocol
+  useEffect(()=>{
+    const onMsg = e => {
+      const d = e.data || {};
+      if (d.type === '__activate_edit_mode') setTweaksOpen(true);
+      if (d.type === '__deactivate_edit_mode') setTweaksOpen(false);
+    };
+    window.addEventListener('message', onMsg);
+    window.parent.postMessage({ type:'__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', onMsg);
+  },[]);
+
+  const setTweak = (k,v) => {
+    setTweaks(prev => {
+      const next = { ...prev, [k]: v };
+      window.parent.postMessage({ type:'__edit_mode_set_keys', edits:{ [k]: v } }, '*');
+      return next;
+    });
+  };
+  const onReset = () => {
+    setTweaks(TWEAK_DEFAULTS);
+    window.parent.postMessage({ type:'__edit_mode_set_keys', edits: TWEAK_DEFAULTS }, '*');
+  };
+
+  const achievements = [
+    { label:"Teams building on Lyra", value:"2,400+" },
+    { label:"Tokens processed monthly", value:"14B+" },
+    { label:"Enterprise retention", value:"99%" },
+    { label:"Countries served", value:"60+" },
+  ];
+
+  return (
+    <div className="flex flex-col min-h-screen" data-screen-label="01 About">
+      <Nav theme={tweaks.theme} onToggleTheme={()=>setTweak('theme', tweaks.theme==='dark'?'light':'dark')} onOpenTweaks={()=>setTweaksOpen(o=>!o)}/>
+      <Hero t={tweaks}/>
+      {tweaks.showStats && <Stats items={achievements}/>}
+      <About t={tweaks}/>
+      <Footer/>
+      <TweaksPanel open={tweaksOpen} onClose={()=>setTweaksOpen(false)} tweaks={tweaks} setTweak={setTweak} onReset={onReset}/>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

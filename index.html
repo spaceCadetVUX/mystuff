@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Animated Glassy Pricing</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        colors: {
+          background: 'var(--background)',
+          foreground: 'var(--foreground)',
+        },
+        fontFamily: {
+          display: ['"Instrument Serif"', 'serif'],
+          sans: ['Inter', 'system-ui', 'sans-serif'],
+        },
+      },
+    },
+  };
+</script>
+<style>
+  :root {
+    --background: #ffffff;
+    --foreground: #0a0a0a;
+    --button-ripple-color: rgba(0, 0, 0, 0.3);
+  }
+  .dark {
+    --background: #0a0a0a;
+    --foreground: #fafafa;
+    --button-ripple-color: rgba(255, 255, 255, 0.5);
+  }
+  html, body, #root { height: 100%; }
+  body {
+    margin: 0;
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--background);
+    color: var(--foreground);
+  }
+  .font-display { font-family: 'Instrument Serif', serif; font-weight: 400 !important; letter-spacing: -0.02em; }
+
+  /* Dark-mode toggle chip */
+  .mode-toggle {
+    position: fixed; top: 18px; right: 18px; z-index: 50;
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 14px; border-radius: 999px;
+    background: rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.1);
+    backdrop-filter: blur(10px);
+    color: var(--foreground);
+    font: 500 13px/1 Inter, sans-serif;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .mode-toggle:hover { background: rgba(0,0,0,0.1); }
+  .dark .mode-toggle {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.15);
+  }
+  .dark .mode-toggle:hover { background: rgba(255,255,255,0.14); }
+</style>
+</head>
+<body>
+  <button class="mode-toggle" id="modeToggle" aria-label="Toggle theme">
+    <span id="modeIcon">🌙</span><span id="modeLabel">Dark</span>
+  </button>
+
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script type="text/babel" src="components/multi-type-ripple-buttons.jsx"></script>
+  <script type="text/babel" src="components/animated-glassy-pricing.jsx"></script>
+
+  <script type="text/babel" data-presets="env,react">
+    const myPricingPlans = [
+      {
+        planName: 'Basic',
+        description: 'Perfect for personal projects and hobbyists.',
+        price: '0',
+        features: ['1 User', '1GB Storage', 'Community Forum'],
+        buttonText: 'Get Started',
+        buttonVariant: 'secondary',
+      },
+      {
+        planName: 'Team',
+        description: 'Collaborate with your team on multiple projects.',
+        price: '49',
+        features: ['10 Users', '100GB Storage', 'Email Support', 'Shared Workspaces'],
+        buttonText: 'Choose Team Plan',
+        isPopular: true,
+        buttonVariant: 'primary',
+      },
+      {
+        planName: 'Agency',
+        description: 'Manage all your clients under one roof.',
+        price: '149',
+        features: ['Unlimited Users', '1TB Storage', 'Dedicated Support', 'Client Invoicing'],
+        buttonText: 'Contact Us',
+        buttonVariant: 'primary',
+      },
+    ];
+
+    const App = () => {
+      const MPP = window.ModernPricingPage;
+      return (
+        <MPP
+          title={<React.Fragment>Find the <span className="text-cyan-400">Perfect Plan</span> for Your Business</React.Fragment>}
+          subtitle="Start for free, then grow with us. Flexible plans for projects of all sizes."
+          plans={myPricingPlans}
+          showAnimatedBackground={true}
+        />
+      );
+    };
+
+    // Wait for component scripts to load before mounting
+    const mount = () => {
+      if (!window.ModernPricingPage || !window.RippleButton) {
+        setTimeout(mount, 50);
+        return;
+      }
+      ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    };
+    mount();
+
+    // Dark-mode toggle
+    const root = document.documentElement;
+    const btn = document.getElementById('modeToggle');
+    const icon = document.getElementById('modeIcon');
+    const label = document.getElementById('modeLabel');
+    const applyMode = (dark) => {
+      root.classList.toggle('dark', dark);
+      icon.textContent = dark ? '☀️' : '🌙';
+      label.textContent = dark ? 'Light' : 'Dark';
+    };
+    // default to dark — the shader is more dramatic there
+    applyMode(true);
+    btn.addEventListener('click', () => applyMode(!root.classList.contains('dark')));
+  </script>
+</body>
+</html>

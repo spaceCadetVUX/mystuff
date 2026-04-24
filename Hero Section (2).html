@@ -5,9 +5,28 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Studio — Laravel · SEO · GEO</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/89/three.min.js"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        colors: {
+          background: 'var(--background)',
+          foreground: 'var(--foreground)',
+        },
+        fontFamily: {
+          display: ['"Instrument Serif"', 'serif'],
+          sans: ['Inter', 'system-ui', 'sans-serif'],
+        },
+      },
+    },
+  };
+</script>
 <style> :root{
      --bg:#05060a;
      --panel:#0a0b10;
@@ -22,7 +41,9 @@
      --serif:"Instrument Serif",ui-serif,Georgia,serif;
      --sans:"Geist",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
      --mono:"Geist Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+     
 }
+ .font-display { font-family: 'Instrument Serif', serif; font-weight: 400 !important; letter-spacing: -0.02em; }
  *{
     box-sizing:border-box
 }
@@ -1101,6 +1122,163 @@
     border-color:rgba(255,77,46,.4);
     color:#ff7a5c
 }
+/* ——— PRICING ——— */
+ #pricing-shader-bg{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    z-index:0;
+    display:block;
+    opacity:.55;
+    pointer-events:none;
+}
+ #pricing .wrap{
+    position:relative;
+    z-index:1;
+}
+ .pricing-grid{
+    display:flex;
+    flex-wrap:wrap;
+    gap:28px;
+    justify-content:center;
+    align-items:stretch;
+}
+ .pricing-card{
+    flex:1 1 280px;
+    max-width:340px;
+    position:relative;
+    padding:36px 32px;
+    border-radius:20px;
+    border:1px solid rgba(255,255,255,.10);
+    background:linear-gradient(135deg,rgba(255,255,255,.09) 0%,rgba(255,255,255,.04) 100%);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    display:flex;
+    flex-direction:column;
+    transition:transform .25s,box-shadow .25s;
+}
+ .pricing-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 20px 60px rgba(0,0,0,.5);
+}
+ .pricing-card.popular{
+    border-color:rgba(34,211,238,.30);
+    background:linear-gradient(135deg,rgba(255,255,255,.16) 0%,rgba(255,255,255,.08) 100%);
+    box-shadow:0 0 0 1px rgba(34,211,238,.20),0 24px 64px rgba(0,0,0,.55);
+    transform:scale(1.04);
+}
+ .pricing-card.popular:hover{
+    transform:scale(1.04) translateY(-4px);
+}
+ .pricing-badge{
+    position:absolute;
+    top:-14px;
+    right:20px;
+    padding:4px 14px;
+    border-radius:999px;
+    background:#22d3ee;
+    color:#000;
+    font-size:11px;
+    font-weight:600;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+}
+ .pricing-name{
+    font-family:var(--serif);
+    font-size:42px;
+    font-weight:400;
+    letter-spacing:-.03em;
+    line-height:1;
+    color:var(--fg);
+    margin:0 0 8px;
+}
+ .pricing-desc{
+    font-size:14px;
+    color:var(--muted);
+    margin:0 0 24px;
+    line-height:1.5;
+}
+ .pricing-amount{
+    display:flex;
+    align-items:baseline;
+    gap:6px;
+    margin-bottom:24px;
+}
+ .pricing-amount .price{
+    font-family:var(--serif);
+    font-size:48px;
+    font-weight:400;
+    letter-spacing:-.03em;
+    color:var(--fg);
+}
+ .pricing-amount .period{
+    font-size:13px;
+    color:var(--muted-2);
+}
+ .pricing-divider{
+    width:100%;
+    height:1px;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.12) 50%,transparent);
+    margin-bottom:20px;
+}
+ .pricing-features{
+    list-style:none;
+    margin:0 0 28px;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    flex:1;
+}
+ .pricing-features li{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:14px;
+    color:rgba(255,255,255,.85);
+}
+ .pricing-features li::before{
+    content:"";
+    flex-shrink:0;
+    width:16px;
+    height:16px;
+    background-color:#22d3ee;
+    -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+    mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+    -webkit-mask-size:contain;
+    mask-size:contain;
+    -webkit-mask-repeat:no-repeat;
+    mask-repeat:no-repeat;
+}
+ .pricing-btn{
+    display:block;
+    width:100%;
+    padding:12px;
+    border-radius:12px;
+    text-align:center;
+    font-size:14px;
+    font-weight:600;
+    text-decoration:none;
+    border:none;
+    cursor:pointer;
+    transition:opacity .2s,background .2s;
+}
+ .pricing-btn.primary{
+    background:#22d3ee;
+    color:#000;
+}
+ .pricing-btn.primary:hover{
+    background:#67e8f9;
+}
+ .pricing-btn.secondary{
+    background:rgba(255,255,255,.10);
+    color:var(--fg);
+    border:1px solid rgba(255,255,255,.18);
+}
+ .pricing-btn.secondary:hover{
+    background:rgba(255,255,255,.18);
+}
 /* ——— FAQ ——— */
  .faq{
     max-width:860px;
@@ -1574,6 +1752,7 @@
       <a href="#services">Services</a>
       <a href="#work">Work</a>
       <a href="#process">Process</a>
+      <a href="#pricing">Pricing</a>
       <a href="#faq">FAQ</a>
     </div>
     <div class="nav-cta">
@@ -1785,6 +1964,78 @@
       <span class="chip">GitHub Actions</span>
       <span class="chip">Sentry</span>
       <span class="chip">Plausible</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRICING ============ -->
+<section class="block" id="pricing" data-screen-label="05 Pricing">
+  <canvas id="pricing-shader-bg" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="sec-label">05 — Pricing</div>
+        <h2 class="sec-title">Find the <em>perfect plan</em>.</h2>
+      </div>
+      <p class="sec-kicker">Start for free, then grow with us. Flexible plans for projects of all sizes.</p>
+    </div>
+
+    <div class="pricing-grid">
+
+      <!-- Basic -->
+      <div class="pricing-card">
+        <p class="pricing-name">Basic</p>
+        <p class="pricing-desc">Perfect for personal projects and hobbyists.</p>
+        <div class="pricing-amount">
+          <span class="price">$0</span>
+          <span class="period">/mo</span>
+        </div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li>1 User</li>
+          <li>1GB Storage</li>
+          <li>Community Forum</li>
+        </ul>
+        <a href="#contact" class="pricing-btn secondary">Get Started</a>
+      </div>
+
+      <!-- Team (Popular) -->
+      <div class="pricing-card popular">
+        <span class="pricing-badge">Most Popular</span>
+        <p class="pricing-name">Team</p>
+        <p class="pricing-desc">Collaborate with your team on multiple projects.</p>
+        <div class="pricing-amount">
+          <span class="price">$49</span>
+          <span class="period">/mo</span>
+        </div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li>10 Users</li>
+          <li>100GB Storage</li>
+          <li>Email Support</li>
+          <li>Shared Workspaces</li>
+        </ul>
+        <a href="#contact" class="pricing-btn primary">Choose Team Plan</a>
+      </div>
+
+      <!-- Agency -->
+      <div class="pricing-card">
+        <p class="pricing-name">Agency</p>
+        <p class="pricing-desc">Manage all your clients under one roof.</p>
+        <div class="pricing-amount">
+          <span class="price">$149</span>
+          <span class="period">/mo</span>
+        </div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li>Unlimited Users</li>
+          <li>1TB Storage</li>
+          <li>Dedicated Support</li>
+          <li>Client Invoicing</li>
+        </ul>
+        <a href="#contact" class="pricing-btn primary">Contact Us</a>
+      </div>
+
     </div>
   </div>
 </section>
@@ -2221,6 +2472,99 @@
     const m=pics.map(p=>`<div class="slide-m"><img src="${p.src}" alt="${p.alt}" loading="lazy"></div>`).join('');
     marquee.innerHTML=`<div class="gallery-marquee-track">${m}${m}</div>`;
   })();
+</script>
+
+<!-- Pricing section WebGL animated background -->
+<script>
+(function() {
+  const canvas = document.getElementById('pricing-shader-bg');
+  if (!canvas) return;
+
+  const section = document.getElementById('pricing');
+  const resizeCanvas = () => {
+    canvas.width  = section.offsetWidth;
+    canvas.height = section.offsetHeight;
+  };
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  const gl = canvas.getContext('webgl');
+  if (!gl) return;
+
+  const vert = `
+    attribute vec2 aPos;
+    void main(){ gl_Position = vec4(aPos, 0.0, 1.0); }
+  `;
+  const frag = `
+    precision highp float;
+    uniform float iTime;
+    uniform vec2 iRes;
+    mat2 rot2d(float a){ float c=cos(a),s=sin(a); return mat2(c,-s,s,c); }
+    float vary(vec2 v1,vec2 v2,float str,float spd){
+      return sin(dot(normalize(v1),normalize(v2))*str+iTime*spd)/100.0;
+    }
+    vec3 ring(vec2 uv,vec2 ctr,float rad,float w){
+      vec2 d=ctr-uv; float len=length(d);
+      len+=vary(d,vec2(0.,1.),5.,2.);
+      len-=vary(d,vec2(1.,0.),5.,2.);
+      float c=smoothstep(rad-w,rad,len)-smoothstep(rad,rad+w,len);
+      return vec3(c);
+    }
+    void main(){
+      float aspect=iRes.x/iRes.y;
+      vec2 uv=gl_FragCoord.xy/iRes;
+      uv-=0.5; uv.x*=aspect;
+      vec2 ctr=vec2(0.0);
+      float mask=0.0, r=.35;
+      mask+=ring(uv,ctr,r,.035).r;
+      mask+=ring(uv,ctr,r-.018,.01).r;
+      mask+=ring(uv,ctr,r+.018,.005).r;
+      vec2 v=rot2d(iTime)*uv;
+      vec3 fg=vec3(v.x,v.y,.7-v.y*v.x);
+      vec3 bg=vec3(0.02,0.03,0.05);
+      vec3 col=mix(bg,fg,mask);
+      col=mix(col,vec3(1.),ring(uv,ctr,r,.003).r);
+      gl_FragColor=vec4(col,1.0);
+    }
+  `;
+
+  const compile = (type, src) => {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src); gl.compileShader(s); return s;
+  };
+  const prog = gl.createProgram();
+  gl.attachShader(prog, compile(gl.VERTEX_SHADER, vert));
+  gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, frag));
+  gl.linkProgram(prog); gl.useProgram(prog);
+
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]), gl.STATIC_DRAW);
+  const aPos = gl.getAttribLocation(prog, 'aPos');
+  gl.enableVertexAttribArray(aPos);
+  gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+
+  const uTime = gl.getUniformLocation(prog, 'iTime');
+  const uRes  = gl.getUniformLocation(prog, 'iRes');
+
+  // Only animate when section is visible (IntersectionObserver)
+  let rafId = null;
+  const render = (t) => {
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.uniform1f(uTime, t * 0.001);
+    gl.uniform2f(uRes, canvas.width, canvas.height);
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+    rafId = requestAnimationFrame(render);
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { if (!rafId) rafId = requestAnimationFrame(render); }
+      else { cancelAnimationFrame(rafId); rafId = null; }
+    });
+  }, { threshold: 0.05 });
+  observer.observe(section);
+})();
 </script>
 </body>
 </html>

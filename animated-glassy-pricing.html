@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Animated Glassy Pricing (Demo)</title>
+  <link rel="stylesheet" href="styles/animated-glassy-pricing.css">
+</head>
+<body>
+  <canvas id="shader-canvas" class="shader-canvas"></canvas>
+
+  <main class="page">
+    <header class="hero">
+      <h1 class="hero-title">Find the <span class="accent">Perfect Plan</span> for Your Business</h1>
+      <p class="hero-sub">Start for free, then grow with us. Flexible plans for projects of all sizes.</p>
+    </header>
+
+    <section class="pricing-grid">
+      <article class="pricing-card">
+        <div class="badge">Basic</div>
+        <h2 class="plan-name">Basic</h2>
+        <p class="plan-desc">Perfect for personal projects and hobbyists.</p>
+        <div class="price-row"><span class="price">$0</span><span class="per">/mo</span></div>
+        <hr class="divider">
+        <ul class="features">
+          <li>1 User</li>
+          <li>1GB Storage</li>
+          <li>Community Forum</li>
+        </ul>
+        <button class="ripple-btn ghost">Get Started</button>
+      </article>
+
+      <article class="pricing-card popular">
+        <div class="most-popular">Most Popular</div>
+        <h2 class="plan-name">Team</h2>
+        <p class="plan-desc">Collaborate with your team on multiple projects.</p>
+        <div class="price-row"><span class="price">$49</span><span class="per">/mo</span></div>
+        <hr class="divider">
+        <ul class="features">
+          <li>10 Users</li>
+          <li>100GB Storage</li>
+          <li>Email Support</li>
+          <li>Shared Workspaces</li>
+        </ul>
+        <button class="ripple-btn primary">Choose Team Plan</button>
+      </article>
+
+      <article class="pricing-card">
+        <h2 class="plan-name">Agency</h2>
+        <p class="plan-desc">Manage all your clients under one roof.</p>
+        <div class="price-row"><span class="price">$149</span><span class="per">/mo</span></div>
+        <hr class="divider">
+        <ul class="features">
+          <li>Unlimited Users</li>
+          <li>1TB Storage</li>
+          <li>Dedicated Support</li>
+          <li>Client Invoicing</li>
+        </ul>
+        <button class="ripple-btn primary">Contact Us</button>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    // Simple ripple effect for buttons
+    document.querySelectorAll('.ripple-btn').forEach(btn => {
+      btn.addEventListener('click', function (e) {
+        const rect = this.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height) * 2;
+        const x = e.clientX - rect.left - size/2;
+        const y = e.clientY - rect.top - size/2;
+        const span = document.createElement('span');
+        span.className = 'ripple';
+        span.style.width = span.style.height = size + 'px';
+        span.style.left = x + 'px';
+        span.style.top = y + 'px';
+        span.style.animationDuration = '600ms';
+        this.appendChild(span);
+        setTimeout(() => span.remove(), 700);
+      });
+    });
+
+    // WebGL shader background (converted from the component)
+    (function () {
+      const canvas = document.getElementById('shader-canvas');
+      if (!canvas) return;
+      const gl = canvas.getContext('webgl');
+      if (!gl) return;
+
+      const vertexSrc = 'attribute vec2 aPosition; void main() { gl_Position = vec4(aPosition, 0.0, 1.0); }';
+      const fragmentSrc = `precision highp float; uniform float iTime; uniform vec2 iResolution; uniform vec3 uBackgroundColor; mat2 rotate2d(float angle){ float c=cos(angle),s=sin(angle); return mat2(c,-s,s,c); } float variation(vec2 v1,vec2 v2,float strength,float speed){ return sin(dot(normalize(v1),normalize(v2))*strength+iTime*speed)/100.0; } vec3 paintCircle(vec2 uv,vec2 center,float rad,float width){ vec2 diff = center-uv; float len = length(diff); len += variation(diff,vec2(0.,1.),5.,2.); len -= variation(diff,vec2(1.,0.),5.,2.); float circle = smoothstep(rad-width,rad,len)-smoothstep(rad,rad+width,len); return vec3(circle); } void main(){ vec2 uv = gl_FragCoord.xy/iResolution.xy; uv.x *= 1.5; uv.x -= 0.25; float mask = 0.0; float radius = .35; vec2 center = vec2(.5); mask += paintCircle(uv,center,radius,.035).r; mask += paintCircle(uv,center,radius-.018,.01).r; mask += paintCircle(uv,center,radius+.018,.005).r; vec2 v=rotate2d(iTime)*uv; vec3 foregroundColor=vec3(v.x,v.y,.7-v.y*v.x); vec3 color=mix(uBackgroundColor,foregroundColor,mask); color=mix(color,vec3(1.),paintCircle(uv,center,radius,.003).r); gl_FragColor=vec4(color,1.); }`;
+
+      function compile(type, src) {
+        const s = gl.createShader(type);
+        gl.shaderSource(s, src);
+        gl.compileShader(s);
+        if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+          console.error(gl.getShaderInfoLog(s));
+        }
+        return s;
+      }
+
+      const prog = gl.createProgram();
+      gl.attachShader(prog, compile(gl.VERTEX_SHADER, vertexSrc));
+      gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, fragmentSrc));
+      gl.linkProgram(prog);
+      gl.useProgram(prog);
+
+      const buf = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]), gl.STATIC_DRAW);
+      const aPos = gl.getAttribLocation(prog, 'aPosition');
+      gl.enableVertexAttribArray(aPos);
+      gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+
+      const iTimeLoc = gl.getUniformLocation(prog, 'iTime');
+      const iResLoc = gl.getUniformLocation(prog, 'iResolution');
+      const bgLoc = gl.getUniformLocation(prog, 'uBackgroundColor');
+
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        gl.viewport(0,0,gl.drawingBufferWidth, gl.drawingBufferHeight);
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      function isDark() { return document.documentElement.classList.contains('dark'); }
+
+      function render(t) {
+        const time = t * 0.001;
+        gl.uniform1f(iTimeLoc, time);
+        gl.uniform2f(iResLoc, canvas.width, canvas.height);
+        const bg = isDark() ? [0,0,0] : [1,1,1];
+        gl.uniform3fv(bgLoc, new Float32Array(bg));
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+        requestAnimationFrame(render);
+      }
+      requestAnimationFrame(render);
+    })();
+  </script>
+</body>
+</html>
